@@ -1,1 +1,8 @@
 .idea/
+doc
+*.env
+.tmp
+.tmp-gocache
+.agents
+.gocache
+.build

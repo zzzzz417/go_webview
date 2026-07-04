@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DGUT 网球预约</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div id="app">
+    <section id="login-view" class="view login-view">
+      <div class="login-card">
+        <div class="eyebrow">DGUT Tennis Booker</div>
+        <h1>网球预约</h1>
+        <label for="login-username">账号</label>
+        <input id="login-username" type="text" autocomplete="username" placeholder="请输入学号或工号">
+        <label for="login-password">密码</label>
+        <input id="login-password" type="password" autocomplete="current-password" placeholder="请输入统一认证密码">
+        <button id="login-submit" type="button" class="primary wide-btn">登录</button>
+        <p id="login-status" class="status-line"></p>
+      </div>
+    </section>
+
+    <section id="shell-view" class="view hidden">
+      <header class="topbar">
+        <div class="brand"></div>
+        <nav class="top-nav">
+          <button id="nav-main" type="button" class="nav-btn active">主界面</button>
+          <button id="nav-settings" type="button" class="nav-btn">设置</button>
+        </nav>
+      </header>
+
+      <main class="page-stack">
+        <section id="page-main" class="page active">
+          <div class="main-layout">
+            <section class="panel matrix-panel">
+              <div class="matrix-toolbar">
+                <div class="toolbar-group">
+                  <label for="site-select">场地</label>
+                  <select id="site-select"></select>
+                </div>
+              </div>
+
+              <div class="matrix-wrapper">
+                <table id="matrix-table"></table>
+              </div>
+            </section>
+
+            <aside class="panel side-panel">
+              <section class="summary-inline side-summary">
+                <span class="summary-chip">
+                  <span class="summary-chip-label">场地</span>
+                  <strong id="summary-site-count">0</strong>
+                </span>
+                <span class="summary-chip">
+                  <span class="summary-chip-label">规则</span>
+                  <strong id="summary-pattern-count">0</strong>
+                </span>
+                <span id="summary-running" class="summary-status">未运行</span>
+              </section>
+
+              <section class="sub-panel">
+                <div class="sub-panel-head">
+                  <h3>已选规则</h3>
+                </div>
+                <div class="selection-table-wrap">
+                  <table id="selection-table">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>场地</th>
+                        <th>周几</th>
+                        <th>时间段</th>
+                        <th>当前状态</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+                <div class="btn-row">
+                  <button id="selection-remove" type="button">删除选中</button>
+                  <button id="selection-clear" type="button">清空全部</button>
+                </div>
+              </section>
+
+              <section class="sub-panel booking-panel">
+                <div class="sub-panel-head">
+                  <h3>自动预约</h3>
+                </div>
+                <div class="mode-row">
+                  <label><input type="radio" name="mode" value="rule" checked> 按周规则</label>
+                  <label><input type="radio" name="mode" value="manual"> 手动日期</label>
+                </div>
+                <input id="manual-date" type="date">
+                <p id="rule-hint" class="subtle"></p>
+                <div class="btn-row">
+                  <button id="booking-start" type="button" class="primary">开始预约</button>
+                  <button id="booking-stop" type="button">停止</button>
+                </div>
+              </section>
+
+              <section class="sub-panel logs-panel">
+                <div class="sub-panel-head">
+                  <h3>运行日志</h3>
+                </div>
+                <div id="log-list" class="log-list"></div>
+              </section>
+            </aside>
+          </div>
+        </section>
+
+        <section id="page-settings" class="page">
+          <section class="settings-hero">
+            <div>
+              <div class="eyebrow">Settings</div>
+              <h2>认证与策略</h2>
+            </div>
+            <div class="settings-hero-status">
+              <span id="settings-status" class="state-chip">预约程序已停止</span>
+            </div>
+          </section>
+
+          <div class="settings-layout">
+            <section class="panel settings-card account-card">
+              <div class="panel-head">
+                <div><h2>账号信息</h2></div>
+              </div>
+              <div class="form-grid compact-grid">
+                <label for="settings-username">账号</label>
+                <input id="settings-username" type="text" readonly>
+                <label for="settings-ua">User-Agent</label>
+                <textarea id="settings-ua" readonly></textarea>
+              </div>
+            </section>
+
+            <section class="panel settings-card token-card">
+              <div class="panel-head">
+                <div><h2>认证信息</h2></div>
+              </div>
+              <div class="form-grid compact-grid">
+                <label for="settings-token">Token</label>
+                <textarea id="settings-token" readonly></textarea>
+                <label for="settings-bearer">Bearer</label>
+                <textarea id="settings-bearer" readonly></textarea>
+              </div>
+            </section>
+
+            <section class="panel settings-card strategy-card">
+              <div class="panel-head">
+                <div><h2>预约策略</h2></div>
+              </div>
+              <div class="strategy-row">
+                <label for="sold-out-strategy">售罄处理</label>
+                <select id="sold-out-strategy">
+                  <option value="disable">本轮未命中，等待下一次轮询</option>
+                  <option value="cooldown">进入冷却后继续尝试</option>
+                </select>
+              </div>
+              <div class="action-row">
+                <button id="settings-refresh-token" type="button">刷新 Token</button>
+                <button id="settings-relogin" type="button">重新登录</button>
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </section>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
